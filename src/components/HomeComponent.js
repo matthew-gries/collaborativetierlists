@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Parse from "parse";
+import { Button, TextField } from '@mui/material';
 
 const CODE_LENGTH = 6;
 const ROOM_CODE_CHARSET = 'abcdefghijklmnopqrstuvwxyz';
@@ -104,9 +105,9 @@ export const HomeComponent = () => {
 
   return (
     <div>
-      <button onClick={createRoom}>Create Room</button>
-      <button onClick={(() => joinRoom(roomCodeField))}>Join Room</button>
-      <input type="text" value={roomCodeField} onChange={handleRoomCodeFieldChange} />
+      <Button variant="contained" onClick={createRoom}>Create Room</Button>
+      <Button variant="contained" onClick={(() => joinRoom(roomCodeField))}>Join Room</Button>
+      <TextField id="room-code-field" type="text" onChange={handleRoomCodeFieldChange} />
     </div>
   );
 };

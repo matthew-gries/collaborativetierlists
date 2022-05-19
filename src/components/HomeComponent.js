@@ -54,6 +54,7 @@ export const HomeComponent = () => {
       Room.set('images', []);
       Room.set('text', []);
       Room.set('elementTierMap', {});
+      // Room.set('activeUsers', 0);
       // Default tiers
       Room.set('tiers', [
         {'color': 'red', 'tag': 'S'},

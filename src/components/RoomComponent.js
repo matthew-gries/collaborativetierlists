@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Parse from "parse";
 import { useParseQuery } from "@parse/react";
 import { useParams } from "react-router-dom";
@@ -14,11 +14,48 @@ export const RoomComponent = () => {
   const roomQuery = new Parse.Query("Room");
   roomQuery.contains("code", code);
   // Declare hook and variables to hold hook responses
-  const { isLive, isLoading, isSyncing, results, count, error, reload } =
-  useParseQuery(roomQuery, {
+  const { results } = useParseQuery(roomQuery, {
     enableLocalDatastore: true, // Enables cache in local datastore (default: true)
     enableLiveQuery: true, // Enables live query for real-time update (default: true)
   });
+
+  useEffect(() => {
+    const roomQuery = new Parse.Query("Room");
+    roomQuery.contains("code", code);
+    roomQuery.find()
+      .then((results) => {
+        const result = results[0];
+        result.set("activeUsers", result.get("activeUsers") + 1);
+        return result.save();
+      }).then(() => {
+        console.log("Active users updated!");
+      }).catch((e) => {
+        alert("Problem updating users: " + e);
+      });
+
+    const onRoomExit = () => {
+      console.log("hi");
+      const roomQuery = new Parse.Query("Room");
+      roomQuery.contains("code", code);
+      roomQuery.find()
+        .then((results) => {
+          const result = results[0];
+          const users = result.get("activeUsers") - 1;
+          if (users === 0) {
+            return result.destroy();
+          } else {
+            result.set("activeUsers", result.get("activeUsers") - 1);
+            return result.save();
+          }
+        }).then(() => {
+          console.log("Active users updated!");
+        }).catch((e) => {
+          alert("Problem updating users: " + e);
+        });
+    }
+
+    return onRoomExit;
+  }, [code]);
 
   return (
     <div>
